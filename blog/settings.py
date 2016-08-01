@@ -140,7 +140,7 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, "static_in_env", "media_root")
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
-
+MEDIAFILES_DIRS = (MEDIA_ROOT)
 
 #Dla Heroku
 
