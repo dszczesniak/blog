@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+
+
+
+ {% block nav %}
+  <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav">
+          <a class="blog-nav-item " href="/">Home</a>
+          <a class="blog-nav-item" href="#">Press</a>
+          <a class="blog-nav-item" href="#">New hires</a>
+          {% if request.user.is_authenticated %}
+          <a class="blog-nav-item active" href="/my_blog">MY BLOG</a>
+
+          
+            <a class="blog-nav-item navbar-right" href="/logout/">Logout</a>
+            <a class="blog-nav-item navbar-right"> Logged as: <b>{{request.user}}</b></a>
+          {% else %}
+            <a class="blog-nav-item navbar-right" href="/login/"> Login </a>
+            <a class="blog-nav-item navbar-right" href="/register/"> Register </a>
+          {% endif %}
+        </nav>
+      </div>
+    </div>
+  {% endblock %}
+
+  {% block profile %}
+
+    <div class="container">
+	    <div class="blog-header">
+        {% for prof in profile %}
+          <h2 class="blog-post-title">{{prof.topic}}</h2><hr>
+        {% endfor %}
+	        <div class="col-md-7 blog-main">
+	        <form method="POST" class="post-form" enctype="multipart/form-data">
+	        	{% csrf_token %}
+	        	{{form|crispy}}
+	        	<button type="submit" class="btn btn-lg btn-primary btn-block">Add new one</button>
+	    	</form>
+        
+        {% for post in posts %}
+        <hr>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="thumbnail">
+              {% if post.image %}
+                <img src='{{post.image.url}}' class='img-responsive' />
+              {% endif %}
+                <div class="caption">
+                  <h3>{{ post.title}}<br><small>Created {{post.timestamp}} by {{post.author}}</small></h3>
+                  <p>{{post.content|linebreaks|truncatechars:200}}</p>
+                  <p><a href="{% url "blogapp.views.post_view" pk=post.pk %}" class="btn btn-primary" role="button">View</a></p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        {% endfor %}
+
+          <nav>
+            <ul class="pager">
+
+              <li>
+                {% if posts.has_previous %}
+                  <a href="?page={{ posts.previous_page_number }}">Previous</a>
+                {% endif %}
+              </li>
+
+              <li>
+                <span class="current">
+                Page {{posts.number}} of {{ posts.paginator.num_pages }}
+                </span></li>
+
+              <li>
+                {% if posts.has_next %}
+                <a href="?page={{ posts.next_page_number}}"> Next</a>
+                {% endif %}
+                </li>
+
+            </ul>
+          </nav>
+	    	</div>
+    	</div>
+    </div>
+      
+
+
+{% endblock %}

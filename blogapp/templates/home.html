@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+
+
+<style>
+{% block style %}
+{{block.super}}
+
+	.main{
+		color: grey;
+		border-style: dotted;
+		border-color: black;
+		border-radius: 15px;
+		padding: 15px;
+		margin: 5px;
+	}
+
+{% endblock %}
+</style>
+
+  {% block profile %}
+
+	<div class="container">
+		{% if request.user.is_authenticated %}
+		    {% for prof in profile %}
+		    	<h1 class="blog-title">Welcome {{prof.name}} !</h1><hr>
+		  	{% endfor %}
+		{% else %}
+		<br>
+	   <div class="col-md-6">
+		    <div class="main">
+		    	<h2 class="blog-post-title"> Welcome !</h2> 
+	        	<p class="lead blog-description">Do not waste your time and create your account, and then start the adventure with your own blog! In the meantime, browse the blogs of other people, comment, judge, expressing own opinion about their shared posts. In case help or comments, you are always able to contact us.<br><br>Cheers!</p>
+			</div>
+		</div>
+		{% endif %}
+				
+		<div class="col-md-6">
+		<div class="row">
+		<div class="main">
+			<h4 class="blog-post-title"> Random blogs:</h4><br>
+			{% for profile in all_profiles %}
+				<p>{{forloop.counter}}.<a href="{% url "blogapp.views.blog_detail_view" pk=profile.pk %}"> {{profile.topic}}</a></p>
+			{% endfor %}
+		</div>
+		</div>
+		</div>
+
+		{% if not request.user.is_authenticated %}
+		<div class="col-md-6">
+		<div class="row">
+		<div class="main">
+			<h4 class="blog-post-title"> Contact Us:</h4>
+			<form method="POST" action=''>
+			  {% csrf_token %}
+			{{ form|crispy }}
+			  <input type='submit' value='Send !' />
+			  </form>
+		</div>
+		</div>
+		</div>
+		{% endif %}
+    </div>
+
+
+	{% endblock %}

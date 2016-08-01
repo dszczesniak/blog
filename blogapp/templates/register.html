@@ -1,0 +1,23 @@
+{% extends 'log_base.html' %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+
+
+{% block register %}
+
+ <body>
+
+    <div class=".col-xs-3">
+      
+        <h2 class="form-signin">Register here</h2>
+        <form class="form-signin" action="/accounts/register/"  method="post">
+        {% csrf_token %}
+        {{ form|crispy }}
+      
+        <input type="submit" class="btn btn-lg btn-primary btn-block"  value="Register" />
+        </form>
+
+    </div> 
+  </body>
+
+{% endblock %}

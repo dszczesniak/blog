@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+
+
+<style>
+{% block style %}
+{{block.super}}
+
+.comment {
+    margin: 20px 0px 20px 20px;
+}
+
+
+{% endblock %}
+</style>
+
+
+ {% block nav %}
+  <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav">
+          <a class="blog-nav-item " href="/">Home</a>
+
+          <a class="blog-nav-item" href="#">Press</a>
+          <a class="blog-nav-item" href="#">New hires</a>
+          {% if request.user.is_authenticated %}
+          <a class="blog-nav-item" href="/my_blog">MY BLOG</a>
+
+          
+            <a class="blog-nav-item navbar-right" href="/logout/">Logout</a>
+            <a class="blog-nav-item navbar-right"> Logged as: <b>{{request.user}}</b></a>
+          {% else %}
+            <a class="blog-nav-item navbar-right" href="/login/"> Login </a>
+            <a class="blog-nav-item navbar-right" href="/register/"> Register </a>
+          {% endif %}
+        </nav>
+      </div>
+    </div>
+  {% endblock %}
+
+  {% block profile %}
+
+    <div class="container"><br>
+	    <div class="blog-header">
+          <div class="row">
+            <div class="col-md-12">
+            {% if post.image %}
+              <img src='{{post.image.url}}' class='img-responsive' />
+             {% endif %}
+                <div class="caption">
+                  <h3><br>{{ post.title}}<br><small>Created {{post.timestamp}} by {{post.author}}</small></h3>
+                  <p>{{post.content|linebreaks}}</p>
+                </div>
+<!-- check if my are not author of this post -->
+                {% for pro in profile %}
+                  {% if post.author = pro.author %}
+                    <form method="POST" class="post-form"> {% csrf_token %}
+                    <button type="submit" name ="delete" class="save btn btn-default">Delete</button>
+            		    </form>
+                  {% endif %}
+                {% endfor %}
+
+<!-- List of comments -->
+                <hr>
+                {% for comment in post.comments.all %}
+                  <div class="comment">
+                  <strong>{{ comment.author }}</strong>
+                    <div class="date"><small>{{ comment.created_date }}</small></div>
+                    <p class="comm">{{ comment.text|linebreaks }}</p>
+                </div>
+                {% empty %}
+                    <p>No comments here yet.</p>
+                {% endfor %}
+<!-- Making new comment -->
+                {% if request.user.is_authenticated %}
+                <hr>
+                <div class="row">
+                  <div class="col-md-6">
+                    <h1>Add new comment:</h1>
+                    <form method="POST" class="post-form">{% csrf_token %}
+                        {{ form|crispy}}
+                        <button type="submit" name="comment" class="save btn btn-default">Add</button>
+                    </form><br><br>
+                  </div>
+                </div>
+                {% endif %}
+            </div>
+          </div>
+
+
+	    	</div>
+    </div>
+      
+
+
+{% endblock %}
