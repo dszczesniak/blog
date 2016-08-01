@@ -3,7 +3,6 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import auth
 from django.contrib.auth.forms import UserCreationForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.core.context_processors import csrf
 from django.core.mail import send_mail
 from django.conf import settings
 from django.http import HttpResponseRedirect,HttpResponse
