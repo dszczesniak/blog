@@ -48,6 +48,21 @@ class Profile(models.Model):
     def __str__(self):
         return self.topic
 
+class Favourite(models.Model):
+    name = models.CharField(max_length=50)
+    members = models.ManyToManyField(Profile, through='Membership')
+
+    def __str__(self):              # __unicode__ on Python 2
+        return self.name
+
+
+class Membership(models.Model):
+    author = models.CharField(max_length=50)
+    profile = models.ForeignKey(Profile, default=Profile)
+    favourite = models.ForeignKey(Favourite)
+    created = models.DateTimeField(default=timezone.now)
+
+
 
 class Comment(models.Model):
     post = models.ForeignKey('blogapp.Post', related_name='comments')
@@ -57,4 +72,3 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.text
-

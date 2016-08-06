@@ -18,6 +18,7 @@ from django.conf import settings
 from django.contrib import admin
 from django.conf.urls.static import static
 from blogapp.views import *
+from django.conf.urls import include
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -27,13 +28,15 @@ urlpatterns = [
     url(r'^login/$',  login_view, name='login'),
     url(r'^register/$',  register_view, name='register'),
     url(r'^logout/$',  logout_view, name='logout'),
+    url(r'^captcha/', include('captcha.urls')),
     #creating
     url(r'^new_prof/$',  new_prof_view, name='new_prof'),
     url(r'^blog/(?P<pk>[0-9]+)/$', blog_detail_view, name='blog_detail'),
     url(r'^my_blog/$',  my_blog_view, name='my_blog'),
     url(r'^post/(?P<pk>[0-9]+)/$',  post_view, name='post_view'),
     url(r'^post/(?P<pk>\d+)/comment/$', post_view, name='add_comment_to_post'),
-    #posts
+    #favs
+    url(r'^favs/$', favourites_view, name='favourites'),
 ]
 
 if settings.DEBUG:

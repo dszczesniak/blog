@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+
+<style>
+{% block style %}
+{{block.super}}
+
+  .main{
+    color: grey;
+    padding: 15px;
+    margin: 5px;
+    font-size: 20px;
+  }
+
+{% endblock %}
+</style>
+
+
+{% block nav %}
+<div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav">
+          <a class="blog-nav-item" href="/">Home</a>
+          {% if request.user.is_authenticated %}
+          <a class="blog-nav-item active" href="/favs">Favourites</a>
+          <a class="blog-nav-item" href="/my_blog">MY BLOG</a>
+
+          
+            <a class="blog-nav-item navbar-right" href="/logout/">Logout</a>
+            <a class="blog-nav-item navbar-right"> Logged as: <b>{{request.user}}</b></a>
+          {% else %}
+            <a class="blog-nav-item navbar-right" href="/login/"> Login </a>
+            <a class="blog-nav-item navbar-right" href="/register/"> Register </a>
+          {% endif %}
+        </nav>
+      </div>
+    </div>
+{% endblock %}
+
+
+
+{% block profile %}
+<div class="container">
+      {% if memberships %}
+        <div class="col-md-13">
+        <div class="row">
+        <div class="main">
+          <h4 class="blog-post-title"> Your favourites blogs:</h4><br>
+          {% for membership in memberships %}
+            <p>{{forloop.counter}}.<a href="{% url "blogapp.views.blog_detail_view" pk=membership.profile.pk %}"> {{membership.profile}}</a></p><hr>
+          {% endfor %}
+        </div>
+        </div>
+        </div>
+      {% endif %}
+
+</div>
+{% endblock %}

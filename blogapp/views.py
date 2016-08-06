@@ -11,7 +11,7 @@ from django.shortcuts import get_object_or_404
 from django.shortcuts import render_to_response
 from django.contrib.auth import authenticate, get_user_model, login, logout
 from .forms import UserLoginForm, UserRegisterForm, NewProfForm, PostForm, CommentForm, SendMessageForm
-from .models import Profile, Post
+from .models import Profile, Post, Favourite, Membership
 from datetime import datetime
 
 
@@ -20,12 +20,16 @@ from datetime import datetime
 def home(request):
 	all_profiles = Profile.objects.order_by('?')[:5]
 
+
+
 	if request.user.is_authenticated():
 		profile = Profile.objects.filter(author = request.user)
+		memberships = Membership.objects.filter(author=request.user).order_by('-created')[:5]
 
 		context = {
 		'profile':profile,
 		'all_profiles':all_profiles,
+		'memberships':memberships,
 		}
 
 		return render(request, "home.html", context)
@@ -33,15 +37,14 @@ def home(request):
 
 		form = SendMessageForm(request.POST or None)
 		if form.is_valid():
-			
+			human = True
 			form_message = form.cleaned_data.get("message")
-
+			email = form.cleaned_data.get("email")
 			subject = form.cleaned_data.get("subject")
-			from_emial = settings.EMAIL_HOST_USER
-			
-			to_email = ['testowymailemail@gmail.com']
 
-			contact_message = "\n\n%s \n\ngreetings" %(form_message)
+			from_emial = settings.EMAIL_HOST_USER
+			to_email = ['testowymailemail@gmail.com']
+			contact_message = "%s \n\nfrom %s" %(form_message, email)
 
 			send_mail(subject, contact_message, from_emial, to_email, fail_silently=False)
 
@@ -112,6 +115,7 @@ def new_prof_view(request):
 	if request.user.is_authenticated():
 		profile = Profile.objects.filter(author = request.user)
 
+
 		if profile:
 			print ('good')
 			return HttpResponseRedirect('/my_blog')
@@ -134,25 +138,40 @@ def new_prof_view(request):
 
 
 
+
 def blog_detail_view(request, pk):
 	user = request.user
 	profile = get_object_or_404(Profile, pk=pk)
 	posts_list = Post.objects.filter(author = profile.author).order_by('-updated')
-	
+	profile = Profile.objects.get(author=profile.author, topic=profile.topic)
+	memberships = Membership.objects.filter(author=request.user, profile__topic=profile.topic)
 
 
-	context = {
-		'profile':profile,
-		'posts_list':posts_list,
-	}
 
-	return render(request,"blog_detail.html", context)
+	if request.method == "POST" and "add" in request.POST:
+		favourites = Favourite.objects.get_or_create(name=profile.topic+'-'+str(user.id))[0]
+		membership = Membership.objects.get_or_create(author=request.user, profile=profile, favourite=favourites)[0]
+		return redirect('blogapp.views.blog_detail_view', pk=profile.pk)
+
+
+	elif request.method == "POST" and "delete" in request.POST:
+		favourites = Favourite.objects.get(name=profile.topic+'-'+str(user.id)).delete()
+
+		return redirect('blogapp.views.blog_detail_view', pk=profile.pk)
+
+	else:
+		context = {
+			'profile':profile,
+			'posts_list':posts_list,
+			'memberships':memberships,
+		}
+
+		return render(request,"blog_detail.html", context)
 
 
 @login_required
 def my_blog_view(request):
 
-	if request.user.is_authenticated():
 		profile = Profile.objects.filter(author = request.user)
 
 		if not profile:
@@ -235,3 +254,17 @@ def post_view(request, pk):
 			'post':post,
 		}
 		return render(request, "post_view.html", context)
+
+
+@login_required
+def favourites_view(request):
+
+	profile = Profile.objects.filter(author = request.user)
+	memberships = Membership.objects.filter(author=request.user).order_by('-created')
+
+	context = {
+		'profile':profile,
+		'memberships':memberships,
+	}
+
+	return render(request, "favourites.html", context)

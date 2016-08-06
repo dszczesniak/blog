@@ -1,6 +1,8 @@
 from django import forms
+from captcha.fields import CaptchaField
 from .models import *
 from django.contrib.auth import authenticate, get_user_model, login, logout
+
 
 
 
@@ -107,3 +109,4 @@ class SendMessageForm(forms.Form):
 	email = forms.EmailField(required=True)
 	message = forms.CharField(
 		widget=forms.Textarea(attrs={'rows': '5', 'cols': '60',}), required=True)
+	captcha = CaptchaField()

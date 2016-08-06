@@ -16,6 +16,16 @@
 		margin: 5px;
 	}
 
+	.main2{
+		color: grey;
+		border-style: dotted;
+		border-color: black;
+		border-radius: 15px;
+		padding: 15px;
+		margin: 5px;
+		padding-bottom: 40px;
+	}
+
 {% endblock %}
 </style>
 
@@ -26,6 +36,21 @@
 		    {% for prof in profile %}
 		    	<h1 class="blog-title">Welcome {{prof.name}} !</h1><hr>
 		  	{% endfor %}
+
+			{% if memberships %}
+			<div class="col-md-6">
+			<div class="row">
+			<div class="main2">
+				<h4 class="blog-post-title"> Favourites blogs:</h4><br>
+				{% for membership in memberships %}
+					<p>{{forloop.counter}}.<a href="{% url "blogapp.views.blog_detail_view" pk=membership.profile.pk %}"> {{membership.profile}}</a></p>
+				{% endfor %}
+				<a style="float:right" class="btn btn-sm btn-primary" href="/favs" role="button">More.. &raquo;</a>
+
+			</div>
+			</div>
+			</div>
+			{% endif %}
 		{% else %}
 		<br>
 	   <div class="col-md-6">

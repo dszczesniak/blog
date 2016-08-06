@@ -2,14 +2,14 @@
 {% load crispy_forms_tags %}
 {% load staticfiles %}
 
+
 {% block nav %}
 <div class="blog-masthead">
       <div class="container">
         <nav class="blog-nav">
           <a class="blog-nav-item " href="/">Home</a>
-          <a class="blog-nav-item" href="#">Press</a>
-          <a class="blog-nav-item" href="#">New hires</a>
           {% if request.user.is_authenticated %}
+          <a class="blog-nav-item" href="/favs">Favourites</a>
           <a class="blog-nav-item" href="/my_blog">MY BLOG</a>
 
           
@@ -31,7 +31,19 @@
     <div class="container">
       <div class="blog-header">
         {% if profile %}
-          <h2 class="blog-post-title">{{profile.topic}}</h2><hr>
+          <h2 class="blog-post-title">{{profile.topic}}</h2><br>
+          {% if memberships %}
+                <form method="POST" action=''>
+                {% csrf_token %}
+                <input type='submit' name ="delete" value='Delete from Favs' />
+            </form>
+          {% else %}
+            <form method="POST" action=''>
+                {% csrf_token %}
+                <input type='submit' name ="add" value='Add to Favs !' />
+            </form>
+          {% endif %}
+          <hr>
         {% endif %}
         
       {% for post in posts_list %}

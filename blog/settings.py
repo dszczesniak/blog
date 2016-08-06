@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'blogapp',
     'crispy_forms',
+    'storages',
+    'captcha',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -107,6 +109,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+SOUTH_MIGRATION_MODULES = {
+    'captcha': 'captcha.south_migrations',
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.9/topics/i18n/
@@ -140,7 +145,24 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, "static_in_env", "media_root")
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
+
 MEDIAFILES_DIRS = (MEDIA_ROOT)
+
+
+
+
+
+#AWS S3 STATICK FILES
+
+
+
+#AWS_STORAGE_BUCKET_NAME = 'dszczblog'
+#AWS_ACCESS_KEY_ID = 'AKIAINU42XTSXZ436DBA'
+#AWS_SECRET_ACCESS_KEY = 'xG2fo4kvYIx8gGpRkcVMn9iEqWU1DqKHPK9gcGH'
+
+
+
+
 
 #Dla Heroku
 
