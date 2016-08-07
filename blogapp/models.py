@@ -17,6 +17,7 @@ class Post(models.Model):
     width_field = models.IntegerField(default=0)
     content = models.TextField()
     updated = models.DateTimeField(default=datetime.now())
+    timestamp = models.DateTimeField(default=datetime.now())
 
 
     def __str__(self):
