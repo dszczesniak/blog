@@ -23,7 +23,6 @@ class Post(models.Model):
     def __str__(self):
         return self.title
 
-
 @receiver(pre_delete, sender=Post)
 def post_delete(sender, instance, **kwargs):
     # Pass false so FileField doesn't save the model.
@@ -35,7 +34,6 @@ def post_delete(sender, instance, **kwargs):
 
 class Profile(models.Model):
     onlyletters = RegexValidator(r'^[a-zA-Z]*$', 'Only letters are allowed.')
-
     author = models.ForeignKey('auth.User')
     name = models.CharField(max_length=20, null = True, validators=[onlyletters])
     surname = models.CharField(max_length=25, null = True, validators=[onlyletters])

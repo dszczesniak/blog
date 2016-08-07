@@ -36,10 +36,15 @@
 	        	{% csrf_token %}
 	        	{{form|crispy}}
 	        	<button type="submit" class="btn btn-lg btn-primary btn-block">Add new one</button>
-	    	</form>
+	    	</form><hr>
         
+                  <form method='GET' action=''>
+            <input type='text' name='q' placeholder='Search posts' value='{{ request.GET.q }}' />
+            <input type='submit' value='Search' />
+          </form><br>
+
         {% for post in posts %}
-        <hr>
+     
           <div class="row">
             <div class="col-md-12">
               <div class="thumbnail">
@@ -54,7 +59,7 @@
               </div>
             </div>
           </div>
-
+   <hr>
         {% endfor %}
 
           <nav>
@@ -62,7 +67,7 @@
 
               <li>
                 {% if posts.has_previous %}
-                  <a href="?page={{ posts.previous_page_number }}">Previous</a>
+                  <a href="?page={{ posts.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Previous</a>
                 {% endif %}
               </li>
 
@@ -73,7 +78,7 @@
 
               <li>
                 {% if posts.has_next %}
-                <a href="?page={{ posts.next_page_number}}"> Next</a>
+                <a href="?page={{ posts.next_page_number}}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}"> Next</a>
                 {% endif %}
                 </li>
 

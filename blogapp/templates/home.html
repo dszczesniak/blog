@@ -37,6 +37,8 @@
 		    	<h1 class="blog-title">Welcome {{prof.name}} !</h1><hr>
 		  	{% endfor %}
 
+
+
 			{% if memberships %}
 			<div class="col-md-6">
 			<div class="row">
@@ -68,6 +70,20 @@
 			{% for profile in all_profiles %}
 				<p>{{forloop.counter}}.<a href="{% url "blogapp.views.blog_detail_view" pk=profile.pk %}"> {{profile.topic}}</a></p>
 			{% endfor %}
+		</div>
+		</div>
+		</div>
+
+		<div class="col-md-6">
+		<div class="row">
+		<div class="main">
+			<h4 class="blog-post-title"> Find blog:</h4><br>
+			{% csrf_token %}
+		  	<input type="text" id="search" name="search"  />
+		  	<ul id="search-results">
+
+		  	</ul>
+
 		</div>
 		</div>
 		</div>

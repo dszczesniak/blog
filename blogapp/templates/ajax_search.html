@@ -1,0 +1,9 @@
+{% if all_profiles.count > 0 %}
+
+{% for profile in all_profiles %}
+	<li><a href="{% url "blogapp.views.blog_detail_view" pk=profile.pk %}">{{profile.topic}}</a></li>
+{% endfor %}
+
+{% else %}
+	<li>Nothing to show! </li>
+{% endif %}

@@ -149,18 +149,30 @@ CRISPY_TEMPLATE_PACK = 'bootstrap3'
 MEDIAFILES_DIRS = (MEDIA_ROOT)
 
 
-
-
-
 #AWS S3 STATICK FILES
 
+AWS_HEADERS = {  # see http://developer.yahoo.com/performance/rules.html#expires
+        'Expires': 'Thu, 31 Dec 2099 20:00:00 GMT',
+        'Cache-Control': 'max-age=94608000',
+}
 
+AWS_STORAGE_BUCKET_NAME = 'dszczblog'
+AWS_ACCESS_KEY_ID = 'AKIAIDIGNRKJJK2NNNQQ'
+AWS_SECRET_ACCESS_KEY = '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'
 
-#AWS_STORAGE_BUCKET_NAME = 'dszczblog'
-#AWS_ACCESS_KEY_ID = 'AKIAINU42XTSXZ436DBA'
-#AWS_SECRET_ACCESS_KEY = 'xG2fo4kvYIx8gGpRkcVMn9iEqWU1DqKHPK9gcGH'
+ # Tell django-storages that when coming up with the URL for an item in S3 storage, keep
+    # it simple - just use this domain plus the path. (If this isn't set, things get complicated).
+    # This controls how the `static` template tag from `staticfiles` gets expanded, if you're using it.
+    # We also use it in the next setting.
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
 
+    # This is used by the `static` template tag from `static`, if you're using that. Or if anything else
+    # refers directly to STATIC_URL. So it's safest to always set it.
+STATIC_URL = "https://%s/" % AWS_S3_CUSTOM_DOMAIN
 
+    # Tell the staticfiles app to use S3Boto storage when writing the collected static files (when
+    # you run `collectstatic`).
+STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 
 
 

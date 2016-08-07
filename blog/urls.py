@@ -37,6 +37,8 @@ urlpatterns = [
     url(r'^post/(?P<pk>\d+)/comment/$', post_view, name='add_comment_to_post'),
     #favs
     url(r'^favs/$', favourites_view, name='favourites'),
+    #ajax
+    url(r'^search/$', search_blog_view),
 ]
 
 if settings.DEBUG:

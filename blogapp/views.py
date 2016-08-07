@@ -4,6 +4,7 @@ from django.contrib import auth
 from django.contrib.auth.forms import UserCreationForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.mail import send_mail
+from django.db.models import Q
 from django.conf import settings
 from django.http import HttpResponseRedirect,HttpResponse
 from django.shortcuts import redirect
@@ -21,7 +22,6 @@ def home(request):
 	all_profiles = Profile.objects.order_by('?')[:5]
 
 
-
 	if request.user.is_authenticated():
 		profile = Profile.objects.filter(author = request.user)
 		memberships = Membership.objects.filter(author=request.user).order_by('-created')[:5]
@@ -33,6 +33,7 @@ def home(request):
 		}
 
 		return render(request, "home.html", context)
+
 	else:
 
 		form = SendMessageForm(request.POST or None)
@@ -143,27 +144,50 @@ def blog_detail_view(request, pk):
 	user = request.user
 	profile = get_object_or_404(Profile, pk=pk)
 	posts_list = Post.objects.filter(author = profile.author).order_by('-updated')
-	profile = Profile.objects.get(author=profile.author, topic=profile.topic)
-	memberships = Membership.objects.filter(author=request.user, profile__topic=profile.topic)
+
+	prof = Profile.objects.get(author=profile.author, topic=profile.topic)
+	memberships = Membership.objects.filter(author=request.user, profile__topic=prof.topic)
+
+
+	#searching posts
+	query = request.GET.get("q")
+	if query:
+		posts_list = posts_list.filter(
+			Q(title__icontains=query) |
+			Q(content__icontains=query) |
+			Q(timestamp__icontains=query)
+			).distinct()
+
+	#pagination
+	paginator = Paginator(posts_list, 6)
+
+	page = request.GET.get('page')
+	try:
+		posts = paginator.page(page)
+	except PageNotAnInteger:
+		posts = paginator.page(1)
+	except EmptyPage:
+		posts = paginator.page(paginator.num_pages)
 
 
 
+	#Favourites button
 	if request.method == "POST" and "add" in request.POST:
-		favourites = Favourite.objects.get_or_create(name=profile.topic+'-'+str(user.id))[0]
-		membership = Membership.objects.get_or_create(author=request.user, profile=profile, favourite=favourites)[0]
+		favourites = Favourite.objects.get_or_create(name=prof.topic+'-'+str(user.id))[0]
+		membership = Membership.objects.get_or_create(author=request.user, profile=prof, favourite=favourites)[0]
 		return redirect('blogapp.views.blog_detail_view', pk=profile.pk)
 
 
 	elif request.method == "POST" and "delete" in request.POST:
-		favourites = Favourite.objects.get(name=profile.topic+'-'+str(user.id)).delete()
-
+		favourites = Favourite.objects.get(name=prof.topic+'-'+str(user.id)).delete()
 		return redirect('blogapp.views.blog_detail_view', pk=profile.pk)
 
 	else:
 		context = {
 			'profile':profile,
-			'posts_list':posts_list,
 			'memberships':memberships,
+			'posts':posts,
+			'object_list':posts,
 		}
 
 		return render(request,"blog_detail.html", context)
@@ -182,9 +206,20 @@ def my_blog_view(request):
 			user = request.user
 			profile = Profile.objects.filter(author = request.user)
 			posts_list = Post.objects.filter(author = request.user).order_by('-updated')
-			paginator = Paginator(posts_list, 6)
+
+			#searching posts / before pagination!
+			query = request.GET.get("q")
+			if query:
+				posts_list = posts_list.filter(
+					Q(title__icontains=query) |
+					Q(content__icontains=query) |
+					Q(timestamp__icontains=query)
+					).distinct()
+
 
 			#pagination
+			paginator = Paginator(posts_list, 6)
+
 			page = request.GET.get('page')
 			try:
 				posts = paginator.page(page)
@@ -192,6 +227,9 @@ def my_blog_view(request):
 				posts = paginator.page(1)
 			except EmptyPage:
 				posts = paginator.page(paginator.num_pages)
+
+
+
 
 			#creating_form
 			form = PostForm(request.POST or None, request.FILES or None)
@@ -220,6 +258,7 @@ def post_view(request, pk):
 
 	post = get_object_or_404(Post, pk=pk)
 
+
 	if request.method == "POST" and "delete" in request.POST:
 		post = get_object_or_404(Post, pk=pk).delete()
 		return redirect('/my_blog')
@@ -246,12 +285,14 @@ def post_view(request, pk):
 			'post':post,
 			'profile':profile,
 			'form':form,
+
 		}
 		return render(request, "post_view.html", context)
 
 	else:
 		context = {
 			'post':post,
+
 		}
 		return render(request, "post_view.html", context)
 
@@ -268,3 +309,15 @@ def favourites_view(request):
 	}
 
 	return render(request, "favourites.html", context)
+
+
+
+def search_blog_view(request):
+	if request.method == "POST":
+		search_text = request.POST['search_text']
+	else:
+		search_text = ''
+
+	all_profiles = Profile.objects.filter(topic__contains=search_text).order_by('topic')[:10]
+
+	return render_to_response('ajax_search.html', {'all_profiles': all_profiles})
