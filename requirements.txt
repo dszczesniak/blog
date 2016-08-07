@@ -1,9 +1,12 @@
 Django==1.9.7
 Pillow==3.3.0
 argparse==1.2.1
+boto==2.42.0
 dj-database-url==0.4.1
 django-crispy-forms==1.6.0
+django-simple-captcha==0.5.2
+django-storages==1.5.0
 gunicorn==19.6.0
+six==1.10.0
 whitenoise==3.2
 wsgiref==0.1.2
-psycopg2==2.5.4
