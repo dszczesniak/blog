@@ -5,14 +5,16 @@ from django.db.models.signals import pre_delete
 from django.dispatch.dispatcher import receiver
 from django.utils import timezone
 from datetime import datetime
+from time import time
 from django.core.validators import RegexValidator
 
-
+def get_upload_file_name(instance, filename):
+    return "uploaded_files/%s_%s" % (str(time()).replace('.','_'), filename)
 
 class Post(models.Model):
     author = models.ForeignKey('auth.User')
     title = models.CharField(max_length=75)
-    image = models.ImageField(null=True, blank=True, width_field="width_field", height_field="height_field", upload_to='images') #must be installed Pillow for ImageField
+    image = models.ImageField(null=True, blank=True, width_field="width_field", height_field="height_field", upload_to=get_upload_file_name) #must be installed Pillow for ImageField
     height_field = models.IntegerField(default=0)
     width_field = models.IntegerField(default=0)
     content = models.TextField()
