@@ -39,12 +39,11 @@ class Profile(models.Model):
     surname = models.CharField(max_length=25, null = True, validators=[onlyletters])
     city = models.CharField(max_length=30, blank=True, validators=[onlyletters])
     birth_date = models.DateField(blank=True, null=True, help_text="Can not be more than 100 years - (Format yyyy-mm-dd)")
-
     topic = models.CharField(max_length = 50, null=True)
-
 
     def __str__(self):
         return self.topic
+
 
 class Favourite(models.Model):
     name = models.CharField(max_length=50)
@@ -56,7 +55,7 @@ class Favourite(models.Model):
 
 class Membership(models.Model):
     author = models.CharField(max_length=50)
-    profile = models.ForeignKey(Profile, default=Profile)
+    profile = models.ForeignKey(Profile)
     favourite = models.ForeignKey(Favourite)
     created = models.DateTimeField(default=timezone.now)
 

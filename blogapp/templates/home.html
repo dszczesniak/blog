@@ -7,6 +7,8 @@
 {% block style %}
 {{block.super}}
 
+
+
 	.main{
 		color: grey;
 		border-style: dotted;
@@ -25,6 +27,7 @@
 		margin: 5px;
 		padding-bottom: 40px;
 	}
+
 
 {% endblock %}
 </style>
@@ -55,15 +58,17 @@
 			{% endif %}
 		{% else %}
 		<br>
-	   <div class="col-md-6">
+	   <div class="col-md-5">
+	   <div class="row">
 		    <div class="main">
 		    	<h2 class="blog-post-title"> Welcome !</h2> 
 	        	<p class="lead blog-description">Do not waste your time and create your account, and then start the adventure with your own blog! In the meantime, browse the blogs of other people, comment, judge, expressing own opinion about their shared posts. In case help or comments, you are always able to contact us.<br><br>Cheers!</p>
 			</div>
+			</div>
 		</div>
 		{% endif %}
 				
-		<div class="col-md-6">
+		<div class="col-md-5">
 		<div class="row">
 		<div class="main">
 			<h4 class="blog-post-title"> Random blogs:</h4><br>
@@ -74,7 +79,7 @@
 		</div>
 		</div>
 
-		<div class="col-md-6">
+		<div class="col-md-5">
 		<div class="row">
 		<div class="main">
 			<h4 class="blog-post-title"> Find blog:</h4><br>
@@ -89,7 +94,7 @@
 		</div>
 
 		{% if not request.user.is_authenticated %}
-		<div class="col-md-6">
+		<div class="col-md-5">
 		<div class="row">
 		<div class="main">
 			<h4 class="blog-post-title"> Contact Us:</h4>
