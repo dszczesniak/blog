@@ -12,7 +12,7 @@ from django.core.validators import RegexValidator
 class Post(models.Model):
     author = models.ForeignKey('auth.User')
     title = models.CharField(max_length=75)
-    image = models.ImageField(null=True, blank=True, width_field="width_field", height_field="height_field") #must be installed Pillow for ImageField
+    image = models.ImageField(null=True, blank=True, width_field="width_field", height_field="height_field", upload_to='images') #must be installed Pillow for ImageField
     height_field = models.IntegerField(default=0)
     width_field = models.IntegerField(default=0)
     content = models.TextField()
