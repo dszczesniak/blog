@@ -49,7 +49,7 @@ def home(request):
 
 			send_mail(subject, contact_message, from_emial, to_email, fail_silently=False)
 
-			return redirect("/")
+			return HttpResponseRedirect('/')
 
 		con = {
 			"form": form,

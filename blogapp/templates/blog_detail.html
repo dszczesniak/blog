@@ -36,6 +36,7 @@
             <input type='text' name='q' placeholder='Search posts' value='{{ request.GET.q }}' />
             <input type='submit' value='Search' />
             </form><br>
+          {% if request.user.is_authenticated %}
           {% if memberships %}
                 <form method="POST" action=''>
                 {% csrf_token %}
@@ -46,6 +47,7 @@
                 {% csrf_token %}
                 <input type='submit' name ="add" value='Add to Favs !' />
             </form>
+          {% endif %}
           {% endif %}
         {% endif %}
         <br>

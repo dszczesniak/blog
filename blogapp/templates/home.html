@@ -10,22 +10,30 @@
 
 
 	.main{
-		color: grey;
-		border-style: dotted;
-		border-color: black;
+		background-color: #E0E0E0;
+		border-style: groove;
 		border-radius: 15px;
 		padding: 15px;
 		margin: 5px;
+	
+
 	}
 
 	.main2{
-		color: grey;
-		border-style: dotted;
-		border-color: black;
+		background-color: #E0E0E0;
+		border-style: groove;
 		border-radius: 15px;
 		padding: 15px;
 		margin: 5px;
 		padding-bottom: 40px;
+	
+
+	}
+
+	.blog-description{
+		color: black;
+		font-size: 20px;
+		line-height: 197%;
 	}
 
 
@@ -43,8 +51,8 @@
 
 
 			{% if memberships %}
-			<div class="col-md-6">
 			<div class="row">
+			<div class="col-md-5">
 			<div class="main2">
 				<h4 class="blog-post-title"> Favourites blogs:</h4><br>
 				{% for membership in memberships %}
@@ -54,22 +62,36 @@
 
 			</div>
 			</div>
-			</div>
+
 			{% endif %}
 		{% else %}
 		<br>
+
 	   <div class="col-md-5">
-	   <div class="row">
 		    <div class="main">
 		    	<h2 class="blog-post-title"> Welcome !</h2> 
-	        	<p class="lead blog-description">Do not waste your time and create your account, and then start the adventure with your own blog! In the meantime, browse the blogs of other people, comment, judge, expressing own opinion about their shared posts. In case help or comments, you are always able to contact us.<br><br>Cheers!</p>
+	        	<p class="blog-description">Don't waste your time and create your account now! Start the adventure with your own blog! You can freely browse other people's blogs, comment, judge, expressing own opinion about their shared posts. If you have any comments, you are always able to contact us.<br><br>Cheers!</p>
 			</div>
-			</div>
+	
 		</div>
 		{% endif %}
 				
-		<div class="col-md-5">
-		<div class="row">
+{% if not request.user.is_authenticated %}
+	
+	   <div class="col-md-5">
+		<div class="main">
+			<h4 class="blog-post-title"> Contact Us:</h4>
+			<form method="POST" action=''>
+			  {% csrf_token %}
+			{{ form|crispy }}
+			  <input type='submit' value='Send !' />
+			  </form>
+		</div>
+		</div>
+	
+		{% endif %}
+
+	   <div class="col-md-5">
 		<div class="main">
 			<h4 class="blog-post-title"> Random blogs:</h4><br>
 			{% for profile in all_profiles %}
@@ -77,10 +99,9 @@
 			{% endfor %}
 		</div>
 		</div>
-		</div>
+
 
 		<div class="col-md-5">
-		<div class="row">
 		<div class="main">
 			<h4 class="blog-post-title"> Find blog:</h4><br>
 			{% csrf_token %}
@@ -91,22 +112,13 @@
 
 		</div>
 		</div>
-		</div>
 
-		{% if not request.user.is_authenticated %}
-		<div class="col-md-5">
-		<div class="row">
-		<div class="main">
-			<h4 class="blog-post-title"> Contact Us:</h4>
-			<form method="POST" action=''>
-			  {% csrf_token %}
-			{{ form|crispy }}
-			  <input type='submit' value='Send !' />
-			  </form>
+		
+
+		
+
+	   
 		</div>
-		</div>
-		</div>
-		{% endif %}
     </div>
 
 
