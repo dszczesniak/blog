@@ -28,8 +28,8 @@ DEBUG = True
 ALLOWED_HOSTS = ['dszczblog.herokuapp.com']
 
 EMAIL_HOST =  'smtp.gmail.com'
-EMAIL_HOST_USER = 'testowymailemail'
-EMAIL_HOST_PASSWORD = 'haslo222'
+EMAIL_HOST_USER = '###'
+EMAIL_HOST_PASSWORD = '###'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
@@ -155,9 +155,9 @@ AWS_HEADERS = {  # see http://developer.yahoo.com/performance/rules.html#expires
         'Cache-Control': 'max-age=94608000',
 }
 
-AWS_STORAGE_BUCKET_NAME = 'dszczblog'
-AWS_ACCESS_KEY_ID = 'AKIAJWGEU6KJYQVV2PKA'
-AWS_SECRET_ACCESS_KEY = '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'
+AWS_STORAGE_BUCKET_NAME = '###'
+AWS_ACCESS_KEY_ID = '###'
+AWS_SECRET_ACCESS_KEY = '###'
 
  # Tell django-storages that when coming up with the URL for an item in S3 storage, keep
     # it simple - just use this domain plus the path. (If this isn't set, things get complicated).
